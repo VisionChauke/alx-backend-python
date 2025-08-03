@@ -8,14 +8,14 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)
     parent_message = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
-    read = models.BooleanField(default=False)  # New field to track read status
 
     def __str__(self):
         return f"Message from {self.sender} to {self.receiver}"
-class MessageHistory(models.Model):
+class Notification(models.Model):
+    user = models.ForeignKey(User, related_name='notifications', on_delete=models.CASCADE)
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
-    action = models.CharField(max_length=50)  # e.g., 'created', 'edited', 'deleted'
+    read = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"History for {self.message.id} - {self.action} at {self.timestamp}"
+        return f"Notification for {self.user} about message {self.message.id}"
